@@ -62,7 +62,7 @@ canvas {
   padding: 20px;
   line-height: 1.5;
   transform: translateX(-400px);
-  transition: transform 1s ease-in-out;
+  transition: transform 0.7s ease-in-out;
 }
 
 .rules.show {
