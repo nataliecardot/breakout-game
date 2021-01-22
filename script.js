@@ -2,6 +2,7 @@ const rulesBtn = document.getElementById('rules-btn');
 const closeBtn = document.getElementById('close-btn');
 const rules = document.getElementById('rules');
 const canvas = document.getElementById('canvas');
+// Element's context: thing onto which drawing will be rendered
 const ctx = canvas.getContext('2d');
 
 let score = 0;
