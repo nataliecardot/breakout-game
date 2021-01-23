@@ -7,6 +7,9 @@ const ctx = canvas.getContext('2d');
 
 let score = 0;
 
+const brickColumnCount = 9;
+const brickRowCount = 5;
+
 // Create ball props
 const ball = {
   x: canvas.width / 2,
@@ -31,14 +34,32 @@ const paddle = {
   dx: 0,
 };
 
-// Draw paddle on canvas
-function drawPaddle() {
-  ctx.beginPath();
-  // Draw rectangle
-  ctx.rect(paddle.x, paddle.y, paddle.w, paddle.h);
-  ctx.fillStyle = '#0095dd';
-  ctx.fill();
-  ctx.closePath();
+// Create brick props
+const brickInfo = {
+  w: 70,
+  h: 20,
+  padding: 10,
+  // Positions for first brick. Will loop through and change values for each one
+  offsetX: 45,
+  offsetY: 60,
+  visible: true,
+};
+
+// Create bricks
+const bricks = [];
+// Loop through columns
+for (let col = 0; col < brickColumnCount; col++) {
+  // Create an array for each column and append it to bricks array
+  bricks[col] = [];
+  // Loop through all rows inside current column and break loop after all rows are done and go back to outer loop, moving onto next column of bricks or rows
+  for (let row = 0; row < brickRowCount; row++) {
+    // Configure brick's coordinates
+    const x = col * (brickInfo.w + brickInfo.padding) + brickInfo.offsetX;
+    const y = row * (brickInfo.h + brickInfo.padding) + brickInfo.offsetY;
+    // Create row array inside each column array. Each row array represents a brick with assigned properties below. Each column array represents a column of bricks or rows
+    // ...brickInfo: using spread syntax to copy properties from brickInfo object literal
+    bricks[col][row] = { x, y, ...brickInfo };
+  }
 }
 
 // Draw ball on canvas
@@ -50,17 +71,41 @@ function drawBall() {
   ctx.closePath();
 }
 
-// Draw everything
-function draw() {
-  drawBall();
-  drawPaddle();
-  drawScore();
+// Draw paddle on canvas
+function drawPaddle() {
+  ctx.beginPath();
+  // Draw rectangle
+  ctx.rect(paddle.x, paddle.y, paddle.w, paddle.h);
+  ctx.fillStyle = '#0095dd';
+  ctx.fill();
+  ctx.closePath();
 }
 
 // Draw score on canvas
 function drawScore() {
   ctx.font = '20px Arial';
   ctx.fillText(`Score: ${score}`, canvas.width - 100, 30);
+}
+
+// Draw bricks on canvas
+function drawBricks() {
+  bricks.forEach((column) => {
+    column.forEach((brick) => {
+      ctx.beginPath();
+      ctx.rect(brick.x, brick.y, brick.w, brick.h);
+      ctx.fillStyle = brick.visible ? '#0095dd' : 'transparent';
+      ctx.fill();
+      ctx.closePath();
+    });
+  });
+}
+
+// Draw everything
+function draw() {
+  drawBall();
+  drawPaddle();
+  drawScore();
+  drawBricks();
 }
 
 draw();
