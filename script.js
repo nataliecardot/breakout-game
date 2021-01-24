@@ -160,9 +160,25 @@ function moveBall() {
         ball.dy *= -1;
         brick.visible = false;
 
-        // increaseScore();
+        increaseScore();
       }
     });
+  });
+}
+
+// Increase score
+function increaseScore() {
+  score++;
+
+  if (score % (brickRowCount * brickRowCount) === 0) {
+    showAllBricks();
+  }
+}
+
+// Make all bricks visible
+function showAllBricks() {
+  bricks.forEach((column) => {
+    column.forEach((brick) => (brick.visible = true));
   });
 }
 
