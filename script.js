@@ -15,7 +15,7 @@ const ball = {
   x: canvas.width / 2,
   y: canvas.height / 2,
   // Ball radius
-  size: 10,
+  radius: 10,
   // Animation
   speed: 4,
   // Moves 4 pixels to right
@@ -65,7 +65,7 @@ for (let col = 0; col < brickColumnCount; col++) {
 // Draw ball on canvas
 function drawBall() {
   ctx.beginPath();
-  ctx.arc(ball.x, ball.y, ball.size, 0, Math.PI * 2);
+  ctx.arc(ball.x, ball.y, ball.radius, 0, Math.PI * 2);
   ctx.fillStyle = '#0095dd';
   ctx.fill();
   ctx.closePath();
@@ -119,14 +119,14 @@ function moveBall() {
   ball.x += ball.dx; // 4 (positive; to the right)
   ball.y += ball.dy; // -4 (negative; upwards)
 
-  // Wall collision (x-axis) - size is radius
-  if (ball.x + ball.size > canvas.width || ball.x - ball.size < 0) {
+  // Wall collision (x-axis) - radius is radius
+  if (ball.x + ball.radius > canvas.width || ball.x - ball.radius < 0) {
     // Same as ball.dx * ball.dx * -1 (reversing sign to make it go opposite direction)
     ball.dx *= -1;
   }
 
   // Wall collision (top/bottom)
-  if (ball.y + ball.size > canvas.height || ball.y - ball.size < 0) {
+  if (ball.y + ball.radius > canvas.height || ball.y - ball.radius < 0) {
     ball.dy *= -1;
   }
 
@@ -135,14 +135,35 @@ function moveBall() {
   // Paddle collision
   if (
     // Leftmost edge of ball is to right of leftmost edge of paddle
-    ball.x - ball.size > paddle.x &&
+    ball.x - ball.radius > paddle.x - paddle.w / 2 &&
     // Rightmost edge of ball is to left of rightmost edge of paddle
-    ball.x + ball.size < paddle.x + paddle.w &&
-    // Top of ball is higher than vertical center of paddle
-    ball.y + ball.size > paddle.y
+    ball.x + ball.radius < paddle.x + paddle.w / 2 &&
+    // Top of ball is higher than top of paddle
+    ball.y + ball.radius > paddle.y + paddle.h / 2
   ) {
     ball.dy = -ball.speed;
   }
+
+  // Brick collision
+  bricks.forEach((column) => {
+    column.forEach((brick) => {
+      if (
+        // Right side of ball goes further right than left edge
+        ball.x + ball.radius > brick.x - brick.w / 2 && // Left brick side check
+        // Left side of ball goes further left than right side of brick
+        ball.x - ball.radius < brick.x + brick.w / 2 && // Right brick side check
+        // Bottom of ball (y axis increases downwards) is lower than Y position of middle of brick
+        ball.y + ball.radius > brick.y - brick.h / 2 && // Top brick side check
+        // Top of ball (y axis decreases upwards) is higher than bottom of brick
+        ball.y - ball.radius < brick.y + brick.h / 2 // Bottom brick side check
+      ) {
+        ball.dy *= -1;
+        brick.visible = false;
+
+        // increaseScore();
+      }
+    });
+  });
 }
 
 // Draw everything
