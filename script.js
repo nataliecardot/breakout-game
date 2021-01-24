@@ -199,8 +199,6 @@ function draw() {
   drawBricks();
 }
 
-draw();
-
 // Update canvas drawing and animation
 function update() {
   movePaddle();
