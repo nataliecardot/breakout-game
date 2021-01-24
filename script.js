@@ -134,12 +134,9 @@ function moveBall() {
 
   // Paddle collision
   if (
-    // Leftmost edge of ball is to right of leftmost edge of paddle
-    ball.x - ball.radius > paddle.x - paddle.w / 2 &&
-    // Rightmost edge of ball is to left of rightmost edge of paddle
-    ball.x + ball.radius < paddle.x + paddle.w / 2 &&
-    // Bottom of ball is lower than top of paddle
-    ball.y + ball.radius > paddle.y - paddle.h / 2
+    ball.x - ball.radius > paddle.x &&
+    ball.x + ball.radius < paddle.x + paddle.w &&
+    ball.y + ball.radius > paddle.y
   ) {
     ball.dy = -ball.speed;
   }
@@ -147,20 +144,22 @@ function moveBall() {
   // Brick collision
   bricks.forEach((column) => {
     column.forEach((brick) => {
-      if (
-        // Right side of ball goes further right than left edge
-        ball.x + ball.radius > brick.x - brick.w / 2 && // Left brick side check
-        // Left side of ball goes further left than right side of brick
-        ball.x - ball.radius < brick.x + brick.w / 2 && // Right brick side check
-        // Bottom of ball (y axis increases downwards) is lower than Y position of middle of brick
-        ball.y + ball.radius > brick.y - brick.h / 2 && // Top brick side check
-        // Top of ball (y axis decreases upwards) is higher than bottom of brick
-        ball.y - ball.radius < brick.y + brick.h / 2 // Bottom brick side check
-      ) {
-        ball.dy *= -1;
-        brick.visible = false;
+      if (brick.visible) {
+        if (
+          // Right side of ball goes further right than left edge
+          ball.x + ball.radius > brick.x - brick.w / 2 && // Left brick side check
+          // Left side of ball goes further left than right side of brick
+          ball.x - ball.radius < brick.x + brick.w / 2 && // Right brick side check
+          // Bottom of ball (y axis increases downwards) is lower than Y position of middle of brick
+          ball.y + ball.radius > brick.y - brick.h / 2 && // Top brick side check
+          // Top of ball (y axis decreases upwards) is higher than bottom of brick
+          ball.y - ball.radius < brick.y + brick.h / 2 // Bottom brick side check)
+        ) {
+          ball.dy *= -1;
+          brick.visible = false;
 
-        increaseScore();
+          increaseScore();
+        }
       }
     });
   });
