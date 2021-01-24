@@ -134,8 +134,9 @@ function moveBall() {
 
   // Paddle collision
   if (
-    ball.x - ball.radius > paddle.x &&
-    ball.x + ball.radius < paddle.x + paddle.w &&
+    ball.x + ball.radius > paddle.x &&
+    ball.x - ball.radius < paddle.x + paddle.w &&
+    // Ball lower than paddle
     ball.y + ball.radius > paddle.y
   ) {
     ball.dy = -ball.speed;
