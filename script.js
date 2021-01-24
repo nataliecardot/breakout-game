@@ -138,8 +138,8 @@ function moveBall() {
     ball.x - ball.radius > paddle.x - paddle.w / 2 &&
     // Rightmost edge of ball is to left of rightmost edge of paddle
     ball.x + ball.radius < paddle.x + paddle.w / 2 &&
-    // Top of ball is higher than top of paddle
-    ball.y + ball.radius > paddle.y + paddle.h / 2
+    // Bottom of ball is lower than top of paddle
+    ball.y + ball.radius > paddle.y - paddle.h / 2
   ) {
     ball.dy = -ball.speed;
   }
@@ -164,6 +164,12 @@ function moveBall() {
       }
     });
   });
+
+  // Hit bottom wall -> lose
+  if (ball.y + ball.radius > canvas.height) {
+    showAllBricks();
+    score = 0;
+  }
 }
 
 // Increase score
