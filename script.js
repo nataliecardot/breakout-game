@@ -83,7 +83,7 @@ function drawPaddle() {
 
 // Draw score on canvas
 function drawScore() {
-  ctx.font = '20px Arial';
+  ctx.font = '18px Arial';
   ctx.fillText(`Score: ${score}`, canvas.width - 100, 30);
 }
 
@@ -114,6 +114,37 @@ function movePaddle() {
   }
 }
 
+// Move ball on canvas
+function moveBall() {
+  ball.x += ball.dx; // 4 (positive; to the right)
+  ball.y += ball.dy; // -4 (negative; upwards)
+
+  // Wall collision (x-axis) - size is radius
+  if (ball.x + ball.size > canvas.width || ball.x - ball.size < 0) {
+    // Same as ball.dx * ball.dx * -1 (reversing sign to make it go opposite direction)
+    ball.dx *= -1;
+  }
+
+  // Wall collision (top/bottom)
+  if (ball.y + ball.size > canvas.height || ball.y - ball.size < 0) {
+    ball.dy *= -1;
+  }
+
+  // console.log(ball.x, ball.y)
+
+  // Paddle collision
+  if (
+    // Leftmost edge of ball is to right of leftmost edge of paddle
+    ball.x - ball.size > paddle.x &&
+    // Rightmost edge of ball is to left of rightmost edge of paddle
+    ball.x + ball.size < paddle.x + paddle.w &&
+    // Top of ball is higher than vertical center of paddle
+    ball.y + ball.size > paddle.y
+  ) {
+    ball.dy = -ball.speed;
+  }
+}
+
 // Draw everything
 function draw() {
   // clear canvas
@@ -130,6 +161,7 @@ draw();
 // Update canvas drawing and animation
 function update() {
   movePaddle();
+  moveBall();
 
   // Draw everything
   draw();
